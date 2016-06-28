@@ -52,7 +52,7 @@ s=getappdata(fhandle, 'ChannelManager');
 channels=getappdata(fhandle, 'channels');
 
 % 08.11.09 Remove ishandle test
-if nargin==1 && ~isempty(s) || nargin==2 && updateflag==false
+if nargin==1 && ~isempty(s)
     tp=s.Panel;
     cs=s.ScrollPane;
     tree=s.Tree;
@@ -66,7 +66,9 @@ if nargin==2 && updateflag==true
     treeModel=javax.swing.tree.DefaultTreeModel(root);
     tree=javax.swing.JTree(treeModel);
     tree.setDragEnabled(true);
-    s.ScrollPane.setViewportView(tree);
+    % Scrollpane
+    scrollpane=get(get(s,'Children'), 'UserData');
+    scrollpane.getComponent(0).setViewportView(tree);
     tree.setBackground(BACKGROUND);
     TreeExpand(tree);
     return
@@ -92,7 +94,7 @@ tree.setBackground(BACKGROUND);
 TreeExpand(tree);
 
 % Channel manager
-channelmanager=uipanel('Parent', fhandle, 'Units', 'normal','Position', [0 0 0.19 1]);
+channelmanager=uipanel('Parent', fhandle, 'Units', 'normal','Position', [0 0 0.2 1]);
 panel=jcontrol(channelmanager, javax.swing.JPanel(), 'Position', [0.02 0.2 0.996 0.78]);
 panel.setLayout(java.awt.GridLayout(1,1));
 panel.add(cs);
@@ -125,7 +127,7 @@ tree.MouseClickedCallback=@CallBack;
 %     button.warning.Units='normalized';
 % end
 
-
+setappdata(fhandle, 'ChannelManager', channelmanager)
 return
 end
 

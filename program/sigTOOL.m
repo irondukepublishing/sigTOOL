@@ -67,7 +67,13 @@ if isempty(RunNumber)
     % Add files form waterloo
     PathToWaterloo=which('sigTOOL');
     % Note this dicates a folder hiearchy. sigTOOL and waterloo must share
-    % a common parent folder
+    % a common parent folder:
+    % ....MyFolder...
+    %               .
+    %               ....sigTOOL
+    %               .
+    %               ....waterloo
+    %               .
     PathToWaterloo=strrep(PathToWaterloo, 'sigTOOL/program/sigTOOL.m', 'waterloo/Waterloo_MATLAB_Library');
     addpath(PathToWaterloo)
     waterloo(6);   

@@ -115,6 +115,7 @@ h.ReduceRange=jcontrol(h.Panel, 'javax.swing.JButton',...
     'MousePressedCallback',@scReduceXRange,...
     'Tag',[desc 'ReduceXRange']);
 set(h.ReduceRange,'Units','normalized');
+
 setappdata(parent, 'XAxisControls', h)
 
 return
