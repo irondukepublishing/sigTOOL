@@ -30,7 +30,7 @@ function varargout=menu_aaaOpen(varargin)
 if nargin==1 && (isnumeric(varargin{1}) && varargin{1}==0)
     varargout{1}=true;
     varargout{2}='Open';
-    tmp.Icon=scGetIcon('FileOpen.png');
+    %tmp.Icon=scGetIcon('FileOpen.png');
     tmp.Tip='Open sigTOOL data file';
     varargout{3}=tmp;
     return

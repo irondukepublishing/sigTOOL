@@ -790,7 +790,6 @@ if strcmp(get(handle, 'Type'), 'uimenu')==1
             h=get(mhandles(index),'Children');
             copyobj(h, handle, 'legacy' );
             delete(mhandles(index));
-            %mhandles(index)=[];
             % Start the checking again
             CheckNestLevel(handle);
             return
@@ -810,13 +809,13 @@ while lidx<=length(mhandles)
         if strcmp(get(mhandles(hidx), 'Label'), get(mhandles(lidx), 'Label'))
             % 14.03.08 Reverse priority: copy hidx/delete lidx
             h=get(mhandles(lidx),'Children');
-            copyobj(h,mhandles(hidx),'legacy' );
-            delete(mhandles(lidx));
-            mhandles(lidx)=[];
-%             h=get(mhandles(hidx),'Children');
-%             copyobj(h,mhandles(lidx));
-%             delete(mhandles(hidx));
-%             mhandles(hidx)=[];
+            if ~isempty(get(mhandles(hidx), 'Callback'))
+                copyobj(h,mhandles(hidx),'legacy' );
+                %delete(mhandles(lidx));
+            else
+                copyobj(h,mhandles(lidx),'legacy' )
+                %delete(mhandles(hidx));
+            end
         end
         hidx=hidx+1;
     end

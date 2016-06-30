@@ -26,9 +26,6 @@ if ~strcmp(get(fhandle, 'Tag'), 'sigTOOL:DataView')
     return
 end
 
-% Set pointer to watch - remember to restore it later
-set(fhandle,'Pointer', 'watch');
-drawnow();
 
 % Get axes handles
 AxesList=getappdata(fhandle, 'AxesList');%findobj(fhandle, 'Type', 'axes');
@@ -74,7 +71,11 @@ XLim=get(h(end),'XLim');
 %----------------------------------------------------------------------
 % 'i' is the channel number
 
-count=0;
+
+% Set pointer to watch - remember to restore it later
+set(fhandle,'Pointer', 'watch');
+pause(eps());
+
 for idx=1:length(ChannelList)
     
     i=ChannelList(idx);
@@ -250,27 +251,8 @@ for idx=1:length(ChannelList)
                         end
                     end
                 end
-                
-                %Is this faster? Not by much
-%                 inc=data.hdr.adc.Multiplex;
-%                 x=nan(max(n),size(xvalues,2));
-%                 y=nan(max(n),size(xvalues,2));
-%                 for j=1:inc
-%                     for k=1:size(xvalues,2)
-%                         idx1=j:inc:n(k);
-%                         x(1:length(idx1),k)=xvalues(idx1,k);
-%                         y(1:length(idx1),k)=yvalues(idx1,k);
-%                         if ~isempty(lineList)
-%                             set(lineList(1), 'XData', x, 'YData', y, 'Color', ColorCycle{j}, 'Parent', grp, 'Tag','sigTOOL:Data');
-%                             lineList=lineList(2:end);
-%                         else
-%                             line(x, y, 'Color', ColorCycle{j},'Parent', grp, 'Tag','sigTOOL:Data');
-%                         end
-%                     end
-%                 end
-%             end
-        % case {'Rising Edge', 'Falling Edge', 'Custom'}
-        otherwise
+
+        otherwise % case {'Rising Edge', 'Falling Edge', 'Custom'}
             %----------------------------------------------------------------------
             % "Custom" data and TTL data - edge triggers and markers
             %----------------------------------------------------------------------
@@ -444,7 +426,7 @@ else
     x=zeros(m*2,size(xvalues,2));
     y=zeros(m*2,size(xvalues,2));
     for i=1:size(xvalues,2)
-        [x(:,i) y(:,i)]=DownSample(xvalues(:,i), yvalues(:,i), factor, m);
+        [x(:,i), y(:,i)]=DownSample(xvalues(:,i), yvalues(:,i), factor, m);
     end
     xvalues=x;
     yvalues=y;
