@@ -13,7 +13,8 @@ end
 
 % Find the x-axis range and update x-axis slider properties
 AxesList=getappdata(fhandle, 'AxesList');
-AxesList=AxesList(AxesList>0);
+% 30.06.2016 Add cast
+AxesList=AxesList(double(AxesList)>0);
 if nargin<3
     XLim=get(AxesList(end),'XLim');
 elseif isscalar(ax)

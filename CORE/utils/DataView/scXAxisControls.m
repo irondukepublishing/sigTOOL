@@ -21,7 +21,8 @@ icons=[scGetBaseFolder() 'CORE' filesep 'icons' filesep];
 
 % X-Axis slider control
 axh=getappdata(parent, 'AxesList');
-axh=axh(axh>0);
+% 30.06.2016 Add cast
+axh=axh(double(axh)>0);
 set(axh(end),'Units','pixels');
 p=get(axh(end),'position');
 set(axh(end), 'Units', 'normalized');

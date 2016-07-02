@@ -603,10 +603,10 @@ set(handles.data_type_popupmenu, 'Callback', @SourceSelector);
 
 % Target selector
 pos(1)=pos(1)+pos(3)+0.01;
-handles.sigtool.targetchannel=copyobj(handles.data_type_popupmenu, h);
+handles.sigtool.targetchannel=copyobj(handles.data_type_popupmenu, h, 'legacy');
 set(handles.sigtool.targetchannel, 'Position', pos,...
     'String', {''});
-handles.sigtool.text1=copyobj(handles.text2, h);
+handles.sigtool.text1=copyobj(handles.text2, h, 'legacy');
 pos(2)=pos(2)+pos(4);
 pos(4)=pos(4)/2;
 set(handles.sigtool.text1, 'Position', pos, 'String', 'Target');

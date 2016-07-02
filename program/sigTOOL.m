@@ -1,4 +1,4 @@
-function fhandle=sigTOOL(filename)
+function [fhandle, menuitems, callbacks]=sigTOOL(filename)
 % sigTOOL: Main entry routine
 %
 % Examples:
@@ -187,7 +187,7 @@ switch nargin
     case 0
         % No file specified: command line call
         % Let dir2menu set up a figure and populate the menu
-        fhandle=dir2menu(parentdirectory);
+        [fhandle, menuitems, callbacks]=dir2menu(parentdirectory);
         % Set up the closing callback to tidy memory
         set(fhandle,'DeleteFcn','scDeleteFigure()')
         % Switch off the axes visibility
@@ -199,29 +199,29 @@ switch nargin
             sigTOOL('pref');
             load(PrefFile, 'Setup');
         end
-        if Setup.FirstRun==true %#ok<NODEF>
-            LocalWelcome(Setup, PrefFile);
-            ShowMessage=true;
-        else
-            if ~strcmp(Setup.HostIP, char(java.net.InetAddress.getLocalHost()))
-                % Redistrubuted?
-                TF=~isempty(strfind(Setup.HostIP, 'kings')) & ~isempty(strfind(Setup.HostIP, '.88')) | ~isempty(strfind(Setup.HostIP, '127.0.0.1'));
-                if ~TF
-                    % Not by King's
-                    NotSoLocalWelcome(Setup, PrefFile);
-                else
-                    % OK - set this PC as host
-                    Setup.HostIP=char(java.net.InetAddress.getLocalHost());
-                    save(PrefFile, 'Setup', '-append', '-v6');
-                end
-            end
-        end
+%         if Setup.FirstRun==true %#ok<NODEF>
+%             LocalWelcome(Setup, PrefFile);
+%             ShowMessage=true;
+%         else
+%             if ~strcmp(Setup.HostIP, char(java.net.InetAddress.getLocalHost()))
+%                 % Redistrubuted?
+%                 TF=~isempty(strfind(Setup.HostIP, 'kings')) & ~isempty(strfind(Setup.HostIP, '.88')) | ~isempty(strfind(Setup.HostIP, '127.0.0.1'));
+%                 if ~TF
+%                     % Not by King's
+%                     NotSoLocalWelcome(Setup, PrefFile);
+%                 else
+%                     % OK - set this PC as host
+%                     Setup.HostIP=char(java.net.InetAddress.getLocalHost());
+%                     save(PrefFile, 'Setup', '-append', '-v6');
+%                 end
+%             end
+%         end
         
     case 1
         % File named on input
         % Invoke new instance of sigTOOL
         if ischar(filename)
-            fhandle=sigTOOL();
+            [fhandle, menuitems, callbacks]=sigTOOL();
             % Load the data and create a data view
             [channels DataView]=scOpen(filename);
             setappdata(fhandle,'channels',channels);

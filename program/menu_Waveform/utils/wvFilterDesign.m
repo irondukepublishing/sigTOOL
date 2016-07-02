@@ -263,7 +263,7 @@ s=findobj(fda.Parent, 'Label', 'Select source');
 h=findobj(h, 'UserData', target);
 set(h, 'Checked', 'off');
 set(h, 'Label', sprintf('%d: Filtered Data', target));
-copyobj(h, s);
+copyobj(h, s, 'legacy');
 delete(h);
 setappdata(fda.Parent, 'sigTOOLViewTargetChannel', 0);
 
