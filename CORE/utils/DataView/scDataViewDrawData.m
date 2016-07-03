@@ -49,7 +49,11 @@ end
 
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 lineoptions={'Color',p.DefaultLineColor,'Tag','sigTOOL:Data', 'PickableParts', 'visible'};
+=======
+lineoptions={'Color',p.DefaultLineColor,'Tag','sigTOOL:Data', 'ToolTip', 'This is a tip'};
+>>>>>>> Stashed changes
 =======
 lineoptions={'Color',p.DefaultLineColor,'Tag','sigTOOL:Data', 'ToolTip', 'This is a tip'};
 >>>>>>> Stashed changes
