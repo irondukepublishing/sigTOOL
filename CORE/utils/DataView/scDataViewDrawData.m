@@ -13,7 +13,7 @@ function scDataViewDrawData(fhandle, render)
 %
 %--------------------------------------------------------------------------
 % Author: Malcolm Lidierth 12/06
-% Copyright © The Author & King's College London 2006
+% Copyright ï¿½ The Author & King's College London 2006
 %--------------------------------------------------------------------------
 %
 % Revisions:
@@ -47,10 +47,11 @@ if nargin>=2
     p.PreRenderDataView=render;
 end
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
+
 lineoptions={'Color',p.DefaultLineColor,'Tag','sigTOOL:Data', 'PickableParts', 'visible'};
+=======
+lineoptions={'Color',p.DefaultLineColor,'Tag','sigTOOL:Data', 'ToolTip', 'This is a tip'};
+>>>>>>> Stashed changes
 =======
 lineoptions={'Color',p.DefaultLineColor,'Tag','sigTOOL:Data', 'ToolTip', 'This is a tip'};
 >>>>>>> Stashed changes
