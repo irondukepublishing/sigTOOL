@@ -48,19 +48,13 @@ if nargin>=2
 end
 
 
+
 lineoptions={'Color',p.DefaultLineColor,'Tag','sigTOOL:Data', 'PickableParts', 'visible'};
-=======
 lineoptions={'Color',p.DefaultLineColor,'Tag','sigTOOL:Data', 'ToolTip', 'This is a tip'};
->>>>>>> Stashed changes
-=======
 lineoptions={'Color',p.DefaultLineColor,'Tag','sigTOOL:Data', 'ToolTip', 'This is a tip'};
->>>>>>> Stashed changes
-=======
 lineoptions={'Color',p.DefaultLineColor,'Tag','sigTOOL:Data', 'ToolTip', 'This is a tip'};
->>>>>>> Stashed changes
-=======
 lineoptions={'Color',p.DefaultLineColor,'Tag','sigTOOL:Data', 'ToolTip', 'This is a tip'};
->>>>>>> Stashed changes
+lineoptions={'Color',p.DefaultLineColor,'Tag','sigTOOL:Data', 'ToolTip', 'This is a tip'};
 textoptions={'BackgroundColor', p.MarkerTextBackgroundColor,...
     'EdgeColor',p.MarkerTextEdgeColor,...
     'Margin', p.MarkerTextMargin,...
