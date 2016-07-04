@@ -47,8 +47,6 @@ if nargin>=2
     p.PreRenderDataView=render;
 end
 
-
-
 lineoptions={'Color',p.DefaultLineColor,'Tag','sigTOOL:Data', 'PickableParts', 'visible'};
 textoptions={'BackgroundColor', p.MarkerTextBackgroundColor,...
     'EdgeColor',p.MarkerTextEdgeColor,...
