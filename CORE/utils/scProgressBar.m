@@ -165,7 +165,7 @@ if nargin>=2 && ischar(whichbar)
     
     MessageText=whichbar;
     STEP=NaN;
-    Icon=javax.swing.ImageIcon(fullfile(scGetBaseFolder(),'program','AltLogo.gif'));
+    Icon=javax.swing.ImageIcon(fullfile(scGetBaseFolder(),'program','Alt_Logo_64.png'));
     Position=[0.375 0.475 0.35 0.2];
     % Inputs
     for i=1:2:length(varargin)-1
@@ -191,8 +191,7 @@ if nargin>=2 && ischar(whichbar)
     panel=uipanel('Parent', fhandle, 'Position', Position);
     set(panel, 'Units', 'pixels');
     Position=get(panel, 'Position');
-    set(panel, 'Units', 'pixels');
-    Position(3)=300;
+    Position(3)=350;
     Position(4)=125;
     set(panel, 'Position', Position);
     set(panel, 'ResizeFcn', {@PanelResizeFcn get(panel, 'Position')}, 'Tag', 'sigTOOL:ProgressPanel', 'Visible', 'on');
@@ -200,7 +199,7 @@ if nargin>=2 && ischar(whichbar)
     j=javax.swing.JInternalFrame(Name,false,true,false,false);
     img=javax.swing.ImageIcon(fullfile(scGetBaseFolder(),'CORE','icons','ChannelTreeWaveformClosed.gif'));
     j.setFrameIcon(img);
-    j.setLayout(java.awt.FlowLayout());
+    j.setLayout(org.jdesktop.swingx.HorizontalLayout(9));
     f=jcontrol(panel, j, 'Position', [0 0 1 1]);
     f.setVisible(true);
     f.InternalFrameClosedCallback=@DeleteFrame;
@@ -209,19 +208,20 @@ if nargin>=2 && ischar(whichbar)
     % Logo
     logo=javax.swing.JButton(Icon);
     f.getContentPane().add(logo);
-    logo.setPreferredSize(java.awt.Dimension(50,50));
+    %logo.setPreferredSize(java.awt.Dimension(50,50));
 
     panel2=f.getContentPane().add(javax.swing.JPanel());
-    panel2.setBackground(java.awt.Color.white);
-    panel2.setLayout(org.jdesktop.swingx.VerticalLayout());
+    %panel2.setBackground(java.awt.Color.white);
+    panel2.setLayout(org.jdesktop.swingx.VerticalLayout(5));
 
     
     % Message
     message=javax.swing.JLabel(MessageText);
     message.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-    message.setForeground(java.awt.Color(100/255, 100/255, 100/255));
+    %message.setForeground(java.awt.Color(100/255, 100/255, 100/255));
     message.setPreferredSize(java.awt.Dimension(200,35));
     panel2.add(message);
+    
     
     % Bar
     if Progbar==true
@@ -230,10 +230,13 @@ if nargin>=2 && ischar(whichbar)
         pm.setMinimum(0);
         pm.setMaximum(100);
         pm.setValue(round(value*100));
-        pm.setPreferredSize(java.awt.Dimension(200,15));
+        %pm.setPreferredSize(java.awt.Dimension(200,15));
         pm.setBorder(javax.swing.border.LineBorder.createBlackLineBorder());
         panel2.add(pm);
     end
+    
+    % Spacer
+    panel2.add(javax.swing.JSeparator(javax.swing.SwingConstants.HORIZONTAL));
     
     
     
