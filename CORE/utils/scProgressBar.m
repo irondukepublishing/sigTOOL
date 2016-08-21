@@ -199,7 +199,9 @@ if nargin>=2 && ischar(whichbar)
     j=javax.swing.JInternalFrame(Name,false,true,false,false);
     img=javax.swing.ImageIcon(fullfile(scGetBaseFolder(),'CORE','icons','ChannelTreeWaveformClosed.gif'));
     j.setFrameIcon(img);
-    j.setLayout(org.jdesktop.swingx.HorizontalLayout(9));
+    j.setLayout(org.jdesktop.swingx.HorizontalLayout(19));
+    j.setOpaque(false);
+    
     f=jcontrol(panel, j, 'Position', [0 0 1 1]);
     f.setVisible(true);
     f.InternalFrameClosedCallback=@DeleteFrame;
