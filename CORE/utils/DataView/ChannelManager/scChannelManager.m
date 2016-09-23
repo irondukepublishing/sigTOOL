@@ -1,4 +1,4 @@
-function [tp, cs, tree, accordion]=scChannelManager(fhandle, updateflag)
+function [channelmanager, cs, tree, accordion]=scChannelManager(fhandle, updateflag)
 % scChannelManager creates the channel manager for a sigTOOL data view
 % 
 % Example:
@@ -41,9 +41,7 @@ function [tp, cs, tree, accordion]=scChannelManager(fhandle, updateflag)
 % Revisions:
 %   08.11.09    See within
 %   24.12.10    Substantial updates for sigTOOL 1.00
-
-BACKGROUND=java.awt.Color.WHITE;
-base=100;
+%   19.09.16    Layout
 
 figure(fhandle);
 
@@ -51,12 +49,12 @@ figure(fhandle);
 s=getappdata(fhandle, 'ChannelManager');
 channels=getappdata(fhandle, 'channels');
 
-% 08.11.09 Remove ishandle test
+% % 08.11.09 Remove ishandle test
 if nargin==1 && ~isempty(s)
-    tp=s.Panel;
+    channelmanager=s.Panel;
     cs=s.ScrollPane;
     tree=s.Tree;
-    accordion=s.Accordion;
+    accordion=[];
     return
 end
 
@@ -64,21 +62,22 @@ if nargin==2 && updateflag==true
     % Delete and recreate
     root=BuildTree(fhandle, channels);
     treeModel=javax.swing.tree.DefaultTreeModel(root);
-    tree=javax.swing.JTree(treeModel);
-    tree.setDragEnabled(true);
+    s.Tree=javax.swing.JTree(treeModel);
+    s.Tree.setDragEnabled(true);
     % Scrollpane
-    scrollpane=get(get(s,'Children'), 'UserData');
-    scrollpane.getComponent(0).setViewportView(tree);
-    tree.setBackground(BACKGROUND);
-    TreeExpand(tree);
+    s.ScrollPane.setViewportView(s.Tree);
+    s.Tree.setBackground(java.awt.Color.WHITE);
+    TreeExpand(s.Tree);
+    setappdata(fhandle, 'ChannelManager', s);
+    accordion=[];
     return
 end
 
-% Create a panel
-tp=jcontrol(fhandle,'javax.swing.JPanel',...
-    'Tag', 'sigTOOL:ChannelManagerPanel',...
-    'Border',javax.swing.BorderFactory.createTitledBorder('Channel Manager'));
-tp.Position=[0 0 0.15 1];
+% Channel manager
+channelmanager=uipanel('Parent', fhandle, 'Units', 'normal','Position', [0 0 0.2 1]);
+panel=jcontrol(channelmanager, javax.swing.JPanel(), 'Position', [0 0 1 1]);
+panel.setLayout(java.awt.BorderLayout());
+panel.setBorder(javax.swing.BorderFactory.createTitledBorder('Channel Manager'));
 
 % Inner scrollpane for channels
 cs=javax.swing.JScrollPane();
@@ -90,44 +89,62 @@ tree=javax.swing.JTree(treeModel);
 tree.setDragEnabled(true);
 % Add to scrollpane
 cs.setViewportView(tree);
-tree.setBackground(BACKGROUND);
+tree.setBackground(java.awt.Color.WHITE);
 TreeExpand(tree);
-
-% Channel manager
-channelmanager=uipanel('Parent', fhandle, 'Units', 'normal','Position', [0 0 0.2 1]);
-panel=jcontrol(channelmanager, javax.swing.JPanel(), 'Position', [0.02 0.2 0.996 0.78]);
-panel.setLayout(java.awt.GridLayout(1,1));
-panel.add(cs);
-panel.setBorder(javax.swing.border.EmptyBorder(2,2,2,2));
+panel.add(cs, java.awt.BorderLayout.CENTER);
 
 % Logo and xaxis controls
+southPanel=javax.swing.JPanel(java.awt.BorderLayout());
+
+% User actions
+buttonPanel=javax.swing.JPanel(java.awt.GridLayout(3,2));
+%Draw
+drawButton=buttonPanel.add(javax.swing.JButton('Draw'));
+drawButton=handle(drawButton, 'callbackproperties');
+set(drawButton, 'ActionPerformedCallback', {@Draw, fhandle});
+drawButton.setToolTipText('Draw only selected channels');
+% Copy
+copyButton=buttonPanel.add(javax.swing.JButton('Copy'));
+copyButton=handle(copyButton, 'callbackproperties');
+set(copyButton, 'ActionPerformedCallback', {@Copy, fhandle});
+copyButton.setToolTipText('Copy selected channels numbers to system clipboard');
+% Export
+exportButton=buttonPanel.add(javax.swing.JButton('Export'));
+exportButton=handle(exportButton, 'callbackproperties');
+set(exportButton, 'ActionPerformedCallback', {@Export, fhandle});
+exportButton.setToolTipText('Export selected channels to base workspace');
+% Commit
+commitButton=buttonPanel.add(javax.swing.JButton('Commit'));
+commitButton=handle(commitButton, 'callbackproperties');
+set(commitButton, 'ActionPerformedCallback', {@Commit, fhandle});
+commitButton.setToolTipText('Commit data of selected channels to RAM');
+% Remap
+remapButton=buttonPanel.add(javax.swing.JButton('Remap'));
+remapButton=handle(remapButton, 'callbackproperties');
+set(remapButton, 'ActionPerformedCallback', {@Remap, fhandle});
+remapButton.setToolTipText('Reset mapping of all channels: release resources associated with virtual memory maps');
+
+southPanel.add(buttonPanel, java.awt.BorderLayout.CENTER);
+
+% Logo
 logo=javax.swing.ImageIcon(fullfile(scGetBaseFolder(),'program','Logo_128.png'));
 logobutton=handle(javax.swing.JButton(logo), 'callbackproperties');
+logobutton.setPreferredSize(java.awt.Dimension(200,70));
+logobutton.setMinimumSize(java.awt.Dimension(200,70));
 logobutton.setMaximumSize(java.awt.Dimension(200,70));
-tp=uipanel('Parent', fhandle, 'Units', 'normal','Position', [0.0 0.0 1 0.1]);
-p=jcontrol(tp, javax.swing.JPanel(org.jdesktop.swingx.HorizontalLayout()), 'Position', [0,0,1,1]); 
-p.setBackground(java.awt.Color.lightGray.brighter());
-p.add(logobutton);
-p.revalidate();
 set(logobutton, 'MouseClickedCallback', 'web(''http://irondukepublishing.com'', ''-browser'')');
+southPanel.add(logobutton, java.awt.BorderLayout.SOUTH);
+
+panel.add(southPanel, java.awt.BorderLayout.SOUTH);
 
 tree=handle(tree, 'callbackproperties');
 tree.MouseClickedCallback=@CallBack;
 
-% errm=scCheckChannels(fhandle);
-% if ~isempty(errm)
-%     img=javax.swing.ImageIcon(fullfile(scGetBaseFolder(),'CORE','icons','warning.gif'));
-%     button.warning=jcontrol(tp, 'javax.swing.JButton',...
-%     'Position', [0.45 0.01 0.1 0.1],...
-%     'ToolTipText', 'Click here to view potential problems with this data file',...
-%     'ActionPerformedCallback',{@ViewWarnings, errm});
-%     button.warning.setIcon(img);
-%     button.warning.Units='pixels';
-%     button.warning.Position(3:4)=25;
-%     button.warning.Units='normalized';
-% end
-
-setappdata(fhandle, 'ChannelManager', channelmanager)
+s.Panel=channelmanager;
+s.ScrollPane=cs;
+s.Tree=tree;
+s.Accordion=[];
+setappdata(fhandle, 'ChannelManager', s);
 return
 end
 
@@ -178,14 +195,11 @@ for idx=1:length(channels)
 %         set(chan, 'UserData', false);
 %         grp(channels{idx}.hdr.Group.Number).add(chan);
 %     else
-        grp=CreateChannelEntry(channels, idx, grp, channels{idx}.hdr.Group.Number, [], sourcelist); %#ok<AGROW>
+        grp=CreateChannelEntry(channels, idx, grp, channels{idx}.hdr.Group.Number, [], sourcelist); 
 %     end
 end
 
-pause(0.2);
-% javax.swing.UIManager.put('Tree.closedIcon', im1);
-% javax.swing.UIManager.put('Tree.openIcon', im2);
-% javax.swing.UIManager.put('Tree.leafIcon', im3);
+pause(0.01);
 return
 end
 
@@ -258,40 +272,33 @@ end
 %--------------------------------------------------------------------------
 function Draw(hObject, EventData, fhandle) %#ok<INUSL>
 %--------------------------------------------------------------------------
+p=get(fhandle, 'Pointer');
+set(fhandle, 'Pointer', 'watch');
+drawnow();
 ChannelList=scGetChannelTree(fhandle, 'selected');
 if ~isempty(ChannelList)
     % TODO: See called function
     scDataViewDrawChannelList(fhandle, ChannelList);
 end
+set(fhandle, 'Pointer', p);
 return
 end
 %--------------------------------------------------------------------------
 
 %--------------------------------------------------------------------------
-function remap(hObject, EventData, fhandle) %#ok<INUSD>
-%--------------------------------------------------------------------------
-scRemap();
-return
-end
-%--------------------------------------------------------------------------
-
-
-%--------------------------------------------------------------------------
-function Inspect(hObject, EventData, fhandle) %#ok<INUSL>
+function Remap(hObject, EventData, fhandle) %#ok<INUSD>
 %--------------------------------------------------------------------------
 ChannelList=scGetChannelTree(fhandle, 'selected');
-if length(ChannelList)==1
-    channels=getappdata(fhandle, 'channels');
-    inspect(channels{ChannelList});
-else
-    warndlg('You must select a single channel for editing');
-end
+scRemap(fhandle, ChannelList);
 return
 end
+%--------------------------------------------------------------------------
 
 %--------------------------------------------------------------------------
 function Commit(hObject, EventData, fhandle) %#ok<INUSL>
 %--------------------------------------------------------------------------
+p=get(fhandle, 'Pointer');
+set(fhandle, 'Pointer', 'watch');
 ChannelList=scGetChannelTree(fhandle, 'selected');
 err=0;
 if ~isempty(ChannelList)
@@ -307,22 +314,24 @@ if err~=0
     warndlg(errmsg);
     lasterror('reset'); %#ok<LERR>
 end
+set(fhandle, 'Pointer', p);
 return
 end
 
-
-function ViewWarnings(hObject, EventData, errm) %#ok<INUSL>
-errm=sprintf('%s\n\n%s\n%s',errm, 'Select File->File Information to see details.',...
-    'For an explanation of the errors/warnings type "helpwin scCheckChannels"');
-warndlg(errm, 'File problems');
+%--------------------------------------------------------------------------
+function Export(hObject, EventData, fhandle) %#ok<INUSL>
+%--------------------------------------------------------------------------
+p=get(fhandle, 'Pointer');
+set(fhandle, 'Pointer', 'watch');
+ChannelList=scGetChannelTree(fhandle, 'selected');
+channels=getappdata(fhandle, 'channels');
+chan=cell(length(channels),1);
+if ~isempty(ChannelList)
+    for idx=1:length(ChannelList)
+        chan{ChannelList(idx)}=channels{ChannelList(idx)};
+    end 
+    assignin('base','channels',chan);
+end
+set(fhandle, 'Pointer', p);
 return
 end
-
-
-function LocalResize(hObject, EventData)
-return
-end
-% function TreeDropCallback(hObject, EventData)
-% % TODO:
-% return
-% end

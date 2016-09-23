@@ -19,7 +19,8 @@ function varargout=scCommit(varargin)
 % Author: Malcolm Lidierth 08/07
 % Copyright © The Author & King's College London 2007-
 % -------------------------------------------------------------------------
-
+%
+% 21.09.2016 Update for nakhur mathods
 
 err=0;
 
@@ -31,38 +32,27 @@ if ishandle(varargin{1})
 elseif iscell(varargin{1})
     channels=varargin{1};
     chan=varargin{2};
+    fhandle=[];
 else
     error('scCommit: sigTOOL data view handle or channel cell array required on input');
 end
 
 % Commit the data
 try 
-    % Note order: if commit fails on adc, tim will not be committed either.
+    % Note order: if try fails on adc, tim will not be committed either.
     % This will return channel unchanged if out-of-memory error occurs
     % accessing channels{chan}.adc on the RHS below
-    if ~isempty(channels{chan}.adc) &&...
-            isempty(strfind(channels{chan}.hdr.channeltype, 'Custom')) &&...
-            isa(channels{chan}.adc, 'adcarray') &&...
-            ~strcmp(channels{chan}.adc.Map.Format{1}, 'double')
-        channels{chan}.adc=adcarray(channels{chan}.adc(),...
-            1,...
-            0,...
-            '',...
-            channels{chan}.adc.Units,...
-            channels{chan}.adc.Labels,...
-            false);
+    if ~isempty(channels{chan}.adc) && isa(channels{chan}.adc, 'nakhur') 
+        channels{chan}.adc.commit();
+    end
+    if ~isempty(channels{chan}.tim) && isa(channels{chan}.tim, 'nakhur') 
+        channels{chan}.tim.commit();
+    end
+    if ~isempty(fhandle) 
         channels{chan}.hdr.title=[channels{chan}.hdr.title '**'];
     end
-    if ~isempty(channels{chan}.tim)
-        channels{chan}.tim=tstamp(channels{chan}.tim(),...
-            1,...
-            0,...
-            '',...
-            channels{chan}.tim.Units,...
-            false);
-    end
-catch
-    err=-1;
+catch ex
+     disp(ex);
 end
 
 

@@ -42,9 +42,7 @@ MaxTime2=scMaxTime(fhandle);
 setappdata(fhandle, 'MaxTime', MaxTime2);
 AxesList=zeros(length(channels),1);
 
-
 AxesPanel=scCreateAxesPanel(fhandle, start, stop);
-
 
 % Put up the uicontrols...
 scCreateFigControls(fhandle, MaxTime2);

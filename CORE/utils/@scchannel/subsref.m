@@ -17,7 +17,19 @@ switch index(1).type
                 if length(index)==1
                     out=obj.(index(1).subs);
                 else
-                    out=subsref(obj.(index(1).subs), index(2:end));
+                    try
+                        out=subsref(obj.(index(1).subs), index(2:end));
+                    catch ex
+                        switch ex.identifier
+                            case 'MATLAB:unassignedOutputs'
+                                %builtin('subsref',obj, index);
+                                % No action needed
+                            case 'MATLAB:maxlhs'
+                                subsref(obj.(index(1).subs), index(2:end));
+                            otherwise
+                                rethrow(ex);
+                        end
+                    end
                 end
             otherwise
                 error('No such property in scchannel class: ''%s''', index(1).subs);
@@ -28,7 +40,7 @@ switch index(1).type
         error('Access method not supported');
 end
 
-if issparse(out)
+if nargout>0 && issparse(out)
     out=full(out);
 end
 

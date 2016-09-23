@@ -35,33 +35,27 @@ for i=1:length(ChannelList)
 end
 clist=zeros(nchan,1);
 
+channelmanager=scChannelManager(fhandle);
+
 AxesPanel=uipanel(fhandle, 'Position',[0 0 1 1],...
     'Background', [224 223 227]/255,...
-    'BorderType', 'beveledout',...
     'BorderWidth', 2,...
     'ForegroundColor', [64 64 122]/255,...
     'HighlightColor', [64 64 122]/255,...
     'Tag', 'sigTOOL:AxesPanel');
-TabPanel=AxesPanel;
 
 
-set(TabPanel, 'Units', 'character');
-pos=get(TabPanel,'Position');
-pos(1)=30;
-set(TabPanel, 'Position', pos);
-set(TabPanel, 'Units', 'pixels');
-pos=get(TabPanel,'Position');
-pos(2)=pos(2)+60;
-pos(4)=pos(4)-60;
-set(TabPanel, 'Position', pos);
-set(TabPanel, 'Units', 'normalized');
-pos=get(TabPanel,'Position');
-pos(3)=1-pos(1);
-set(TabPanel, 'Position', pos);
+if ~isempty(channelmanager)
+    set(AxesPanel, 'units', 'pixels');
+    pos=get(AxesPanel, 'position');
+    set(channelmanager, 'units', 'pixels');
+    cpos=get(channelmanager, 'position');
+    set(AxesPanel, 'position',[cpos(1)+cpos(3),pos(2), pos(3), pos(4)]);
+    set(AxesPanel, 'units', 'normalized');
+    set(channelmanager, 'units', 'normalized');
+end
 
-% Make sure the first axes is visible
-%h=subplot(1,1,1,'Parent', AxesPanel);
-%set(h,'HandleVisibility','off');
+
 
 % For each non-empty channel in ChannelList, create an axes
 j=0;
@@ -164,11 +158,9 @@ for i=1:length(AxesList)
     
     set(AxesList(i),'Position',pos2);
 end
-%
-obj=scChannelManager(fhandle);
 
 set(AxesList,'Units','pixels');
-set(obj,'Units','pixels');
+set(channelmanager,'Units','pixels');
 for i=1:length(AxesList)
     pos2=get(AxesList(i),'Position');
     pos2(4)=pos2(4)-2;
@@ -176,13 +168,10 @@ for i=1:length(AxesList)
 end
 
 set(AxesList,'Units','normalized');
-set(obj,'Units','normalized');
+set(channelmanager,'Units','normalized');
 set(AxesList,'XLim',XLim);
 
-
 setappdata(fhandle,'DataXLim',[0 0]);
-
-
 
 set(AxesList(end),'XTickMode','auto');
 xlabel('Time (s)','FontSize',8);

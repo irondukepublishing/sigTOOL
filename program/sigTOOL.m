@@ -77,7 +77,7 @@ if isempty(RunNumber)
     PathToWaterloo=strrep(PathToWaterloo, fullfile('sigTOOL', filesep, 'program', filesep, 'sigTOOL.m'),...
         fullfile('waterloo', filesep, 'Waterloo_MATLAB_Library'));
     addpath(PathToWaterloo)
-    waterloo(6);   
+    waterloo(6, true);   
 else
     RunNumber=RunNumber+1;
 end

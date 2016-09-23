@@ -232,7 +232,8 @@ save(matfilename, 'sigTOOLDataView', '-v6', '-append');
 % Version
 sigTOOLVersion=scVersion('nodisplay'); %#ok<NASGU>
 save(matfilename,'sigTOOLVersion','-v6','-append');
-close(progbar);
+
+delete(progbar);
 
 sigTOOL(matfilename);
 

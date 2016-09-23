@@ -34,71 +34,57 @@ function varargout=scRemap(fhandle, ChannelList, mode)
 
 % Deprecated
 varargout={};
-%
 
-% if nargin==0
-%     h=findobj('Tag', 'sigTOOL:DataView');
-%     for k=1:length(h)
-%         scRemap(h(k));
-%     end
-%     return
-% end
-% 
-% % Get a local copy of the channel data
-% channels=getappdata(fhandle, 'channels');
-% 
-% % Remove the copy in the application data area
-% if ~isempty(channels)
-%     rmappdata(fhandle, 'channels');
-% end
-% 
-% if nargin==1
-%     ChannelList=1:length(channels);
-% end
-% 
-% if nargin==3 && strcmp(mode, 'exclude')
-%     temp=1:length(channels);
-%     ChannelList=temp(~ismember(temp, ChannelList));
-% end
-% 
-% for k=1:length(ChannelList)
-%     chan=ChannelList(k);
-% 
-%     % Check we have an adcarray map
-%     if ~isempty(channels{chan}) &&...
-%             ~isempty(channels{chan}.adc) &&...
-%             isa(channels{chan}.adc, 'adcarray')
-%         
-%         % Check it is memory mapped
-%         if isa(channels{chan}.adc.Map, 'memmapfile')
-% 
-%             % Copy the memmapfile propery settings
-%             Filename=channels{chan}.adc.Map.Filename;
-%             Writable=channels{chan}.adc.Map.Writable;
-%             Offset=channels{chan}.adc.Map.Offset;
-%             Format=channels{chan}.adc.Map.Format;
-%             Repeat=channels{chan}.adc.Map.Repeat;
-% 
-%             % Reinitialize the map - no virtual memory will be allocated until an
-%             % attempt is made to access data in the new object
-%             channels{chan}.adc.Map=memmapfile(Filename,...
-%                 'Writable', Writable,...
-%                 'Offset', Offset,...
-%                 'Format', Format,...
-%                 'Repeat', Repeat);
-%         end
-% 
-% 
-%     end
-% end
-% 
-% % Place in application data area and quit
-% setappdata(fhandle, 'channels', channels);
-% if nargout>0
-%     varargout{1}=channels;
-% end
+% Cycle through all open sigTOOL data views
+if nargin==0
+    h=findobj('Tag', 'sigTOOL:DataView');
+    for k=1:length(h)
+        scRemap(h(k));
+    end
+    return
+end
+
+% Single view
+
+% Get a local copy of the channel data
+channels=getappdata(fhandle, 'channels');
+
+% Remove the copy in the application data area
+if ~isempty(channels)
+    rmappdata(fhandle, 'channels');
+end
+
+if nargin==1
+    ChannelList=1:length(channels);
+end
+
+if nargin==3 && strcmp(mode, 'exclude')
+    temp=1:length(channels);
+    ChannelList=temp(~ismember(temp, ChannelList));
+end
+
+for k=1:length(ChannelList)
+    chan=ChannelList(k);
+    % Check we have an adcarray map
+    if ~isempty(channels{chan}) && isa(channels{chan}.adc, 'nakhur')
+        channels{chan}.adc.instantiateMap();
+    end
+    if ~isempty(channels{chan}) && isa(channels{chan}.tim, 'nakhur')
+        channels{chan}.tim.instantiateMap();
+    end
+    channels{chan}.hdr.title=strrep(channels{chan}.hdr.title,'**','');
+end
+
+% Place in application data area and quit
+setappdata(fhandle, 'channels', channels);
+scChannelManager(fhandle, true);
+if nargout>0
+    varargout{1}=channels;
+end
 return
 end
+
+
 
 
 
