@@ -39,27 +39,21 @@ channelmanager=scChannelManager(fhandle);
 
 AxesPanel=uipanel(fhandle, 'Position',[0 0 1 1],...
     'Background', [224 223 227]/255,...
-    'BorderWidth', 2,...
     'ForegroundColor', [64 64 122]/255,...
-    'HighlightColor', [64 64 122]/255,...
     'Tag', 'sigTOOL:AxesPanel');
-
 
 if ~isempty(channelmanager)
     set(AxesPanel, 'units', 'pixels');
     pos=get(AxesPanel, 'position');
     set(channelmanager, 'units', 'pixels');
     cpos=get(channelmanager, 'position');
-    set(AxesPanel, 'position',[cpos(1)+cpos(3),pos(2), pos(3), pos(4)]);
+    set(AxesPanel, 'position',[cpos(1)+cpos(3), pos(2)+30, pos(3)-cpos(3), pos(4)]);
     set(AxesPanel, 'units', 'normalized');
     set(channelmanager, 'units', 'normalized');
 end
 
-
-
 % For each non-empty channel in ChannelList, create an axes
 j=0;
-
 
 for idx=1:length(ChannelList)
     

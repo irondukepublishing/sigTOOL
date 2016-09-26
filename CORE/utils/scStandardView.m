@@ -1,9 +1,9 @@
 function scStandardView(fhandle)
 
 channelmanager=getappdata(fhandle, 'ChannelManager');
-units=get(channelmanager, 'Units');
-set(channelmanager, 'Units', 'normal','Position', [0 0 0.2 1]);
-set(channelmanager, 'Units', units);
+units=get(channelmanager.Panel, 'Units');
+set(channelmanager.Panel, 'Units', 'normal','Position', [0 0 0.2 1]);
+set(channelmanager.Panel, 'Units', units);
 
 view=findobj(fhandle, 'Tag', 'sigTOOL:AxesPanel');
 if ~isempty(view)

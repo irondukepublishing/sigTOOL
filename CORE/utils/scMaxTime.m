@@ -14,7 +14,7 @@ function time=scMaxTime(varargin)
 % Copyright © The Author & King's College London 2006-2007
 % -------------------------------------------------------------------------
     
-[fhandle channels]=scParam(varargin{1});
+[fhandle, channels]=scParam(varargin{1});
 time=0;
 for i=1:length(channels)
     if ~isempty(channels{i})&& channels{i}.tim(end)>time

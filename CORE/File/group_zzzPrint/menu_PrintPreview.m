@@ -1,6 +1,6 @@
 function varargout=menu_PrintPreview(varargin)
 % menu_PrintPreview sigTOOL menu callback
-% 
+%
 % Example:
 % menu_PrintPreview(hObject, EventData)
 %       standard callback
@@ -22,16 +22,28 @@ if nargin==1 && varargin{1}==0
     return
 end
 
-[button fhandle]=gcbo;
-[fhandle, AxesPanel, annot, pos]=printprepare(getappdata(fhandle, 'sigTOOLDataView'));
-orient(fhandle, 'landscape');
-pp=printpreview(fhandle);
+[button, fhandle]=gcbo;
 
-% Hangup while print preview is displayed
-while ishandle(pp)
-    pause(0.25);
+type=scGetFigureType(fhandle);
+warning('off', 'MATLAB:print:CustomResizeFcnInPrint');
+switch type
+    case 'sigTOOL:DataView:'
+        [fhandle, AxesPanel, annot, pos]=printprepare(getappdata(fhandle, 'sigTOOLDataView'));
+        orient(fhandle, 'landscape');
+        set(fhandle, 'PaperPositionMode', 'manual');
+        set(fhandle, 'PaperType', 'A4');
+        printpreview(fhandle);
+        postprinttidy(getappdata(fhandle, 'sigTOOLDataView'), AxesPanel, annot, pos);
+        scDataViewDrawData(fhandle, true);
+    case 'sigTOOL:ResultView:'
+        [fhandle, AxesPanel, annot, pos]=printprepare(getappdata(fhandle, 'sigTOOLResultView'));
+        orient(fhandle, 'landscape');
+        et(fhandle, 'PaperPositionMode', 'manual');
+        set(fhandle, 'PaperType', 'A4');
+        printpreview(fhandle);
+        postprinttidy(getappdata(fhandle, 'sigTOOLResultView'), AxesPanel, annot, pos);
+end
+warning('on', 'MATLAB:print:CustomResizeFcnInPrint');
 end
 
-postprinttidy(getappdata(fhandle, 'sigTOOLDataView'), AxesPanel, annot, pos);
-end
 

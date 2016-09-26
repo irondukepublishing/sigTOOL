@@ -74,7 +74,7 @@ if nargin==2 && updateflag==true
 end
 
 % Channel manager
-channelmanager=uipanel('Parent', fhandle, 'Units', 'normal','Position', [0 0 0.2 1]);
+channelmanager=uipanel('Parent', fhandle, 'Units', 'normal','Position', [0 0 0.2 1], 'Tag', 'sigTOOL:ChannelManagerPanel');
 panel=jcontrol(channelmanager, javax.swing.JPanel(), 'Position', [0 0 1 1]);
 panel.setLayout(java.awt.BorderLayout());
 panel.setBorder(javax.swing.BorderFactory.createTitledBorder('Channel Manager'));

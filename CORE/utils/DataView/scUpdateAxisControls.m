@@ -35,11 +35,14 @@ switch caller
         fcn=h.Slider.AdjustmentValueChangedCallback;
         h.Slider.AdjustmentValueChangedCallback=[];
         h.Slider.setValue(XLim(1)*1000);
+        h.Dial.setValue(XLim(1)*1000);
         range=XLim(2)-XLim(1);
         h.Slider.Model.setExtent(range*1000);
         h.Slider.AdjustmentValueChangedCallback=fcn;
-    case 'slider'
-        % No longer called by slider
+    case 'slider' 
+         h.Dial.setValue(h.Slider.getValue());
+    case 'dial'
+         h.Slider.setValue(h.Dial.getValue());
 end
 
 % All

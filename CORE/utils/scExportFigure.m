@@ -79,14 +79,6 @@ if strcmp(get(fhandle, 'Tag'), 'sigTOOL:DataView') &&...
         scDataViewDrawData(fhandle, false)
 end
 
-% 27.06.2016 Linesmoothing no longer applied - being dropped by TMW
-% % Switch off line smoothing
-% lines=findobj(fhandle, 'Type', 'line');
-% if ~isempty(lines)
-%     SmoothState=get(lines(1), 'Linesmoothing');
-%     set(lines, 'Linesmoothing', 'off');
-% end
-
 if strcmp(format,'.ai')
     orient(fhandle, 'portrait');    
 else
@@ -158,14 +150,6 @@ if status~=0
     fprintf('scExportFigure: Failed to open by all routes\n%s\n', filename);
 end
 
-% if ~isempty(SmoothState) && ~isempty(lines)
-%     set(lines, 'Linesmoothing', SmoothState);
-% end
-
-% Restore
-% if strcmp(get(fhandle, 'Tag'), 'sigTOOL:DataView') && any(strcmp(format, {'ai' 'pdf' 'eps'}))
-%         scDataViewDrawData(fhandle, true)
-% end
 scStandardView(fhandle);
 
 % Copy output filename to system clipboard (for manual open)
@@ -174,7 +158,10 @@ clipboard('copy', filename);
 return
 end
 
+
+%----------------------------------------------------------
 function tidy(fhandle, AxesPanel, annot, pos, dmode)
+%----------------------------------------------------------
 if strcmp(get(fhandle, 'Tag'), 'sigTOOL:ResultView')
     postprinttidy(getappdata(fhandle, 'sigTOOLResultView'), AxesPanel, annot, pos, dmode);
 elseif strcmp(get(fhandle, 'Tag'), 'sigTOOL:DataView') 
@@ -182,3 +169,4 @@ elseif strcmp(get(fhandle, 'Tag'), 'sigTOOL:DataView')
 end
 return
 end
+%----------------------------------------------------------

@@ -6,7 +6,6 @@ function desc=scGetFigureType(fhandle)
 % string=scGetFigureType(fhandle)
 %
 
-
 switch get(fhandle,'Tag')
     case 'sigTOOL:DataView'
         desc='sigTOOL:DataView:';

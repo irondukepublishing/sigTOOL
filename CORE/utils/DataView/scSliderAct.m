@@ -1,14 +1,12 @@
-function scSliderAct(hObject, EventData)
+function scSliderAct(hObject, EventData, fhandle)
 % Callback routine for XAxisSlider control
 %
 %ML 05/05
 
 % Avoid repeated updates if dragging
-if EventData.getValueIsAdjusting()==1
+if  isMultipleCall()
     return
 end
-
-fhandle=ancestor(hObject.hghandle, 'figure');
 
 AxesList=getappdata(fhandle,'AxesList');
 AxesList=AxesList(AxesList~=0);
@@ -25,8 +23,16 @@ XLim(1)=val;
 XLim(2)=val+range;
 set(AxesList,'XLim',XLim);
 scCleanUpAxes(AxesList);
+
 % Update axis controls
-scUpdateAxisControls(fhandle, 'slider');
+if  isa(hObject, 'javahandle_withcallbacks.kcl.waterloo.widget.GJDial')
+    scUpdateAxisControls(fhandle, 'dial');
+else
+    scUpdateAxisControls(fhandle, 'slider');
+end
+
+set(fhandle, 'Pointer', 'arrow');
+drawnow();
 end
 
 
