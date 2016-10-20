@@ -22,7 +22,7 @@ function scDataViewDrawData(fhandle, render)
 
 
 % Make sure this is a sigTOOL data view
-if ~strcmp(get(fhandle, 'Tag'), 'sigTOOL:DataView')
+if ~ishghandle(fhandle) || ~strcmp(get(fhandle, 'Tag'), 'sigTOOL:DataView')
     return
 end
 

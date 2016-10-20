@@ -30,19 +30,21 @@ end
 % set(AxesList, 'XLim', XLim);
 h=getappdata(fhandle, 'XAxisControls');
 
+if h.Slider.getValueIsAdjusting() 
+            return
+end
+
 switch caller
     case {'xmin' 'xmax' 'increase' 'reduce' 'resultmanager'}
-        fcn=h.Slider.AdjustmentValueChangedCallback;
-        h.Slider.AdjustmentValueChangedCallback=[];
         h.Slider.setValue(XLim(1)*1000);
         h.Dial.setValue(XLim(1)*1000);
         range=XLim(2)-XLim(1);
         h.Slider.Model.setExtent(range*1000);
-        h.Slider.AdjustmentValueChangedCallback=fcn;
+        h.Dial.setValue(h.Slider.getValue());
     case 'slider' 
-         h.Dial.setValue(h.Slider.getValue());
+        h.Dial.setValue(h.Slider.getValue());
     case 'dial'
-         h.Slider.setValue(h.Dial.getValue());
+        h.Slider.setValue(h.Dial.getValue());
 end
 
 % All

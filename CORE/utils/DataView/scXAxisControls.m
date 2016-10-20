@@ -36,7 +36,7 @@ pos=get(AxesPanel, 'Position');
 
 % Axis control panel
 h.Panel=uipanel(parent, 'Units', 'pixels',...
-    'Position', [pos(1)+2, 1, pos(3)-2, 30],...
+    'Position', [pos(1)+2, 1, pos(3)-2, 32],...
     'ForegroundColor', [64 64 122]/255,...    
     'Tag', 'sigTOOL:XAxisControls');
 set(AxesPanel, 'Units', 'normalized');
@@ -57,10 +57,16 @@ h.Slider.setMinimum(0);
 h.Slider.setMaximum(MaxTime);
 h.Dial.setMinimum(0);
 h.Dial.setMaximum(MaxTime);
+
 h.Slider=handle(h.Slider, 'callbackproperties');
 set(h.Slider,'StateChangedCallback',{@scSliderAct, parent});
 h.Dial=handle(h.Dial, 'callbackproperties');
 set(h.Dial,'StateChangedCallback',{@scSliderAct, parent});
+
+h.MaxText=handle(h.MaxText, 'callbackproperties');
+set(h.MaxText,'ActionPerformedCallback',{@xmax, parent});
+h.MinText=handle(h.MinText, 'callbackproperties');
+set(h.MinText,'ActionPerformedCallback',{@xmin, parent});
 
 h.IncreaseRange.setPreferredSize(java.awt.Dimension(28,28));
 h.ReduceRange.setPreferredSize(java.awt.Dimension(28,28));
@@ -82,10 +88,10 @@ return
 end
 
 %--------------------------------------------------------------------------
-function xmin(hObject, EventData)
+function xmin(hObject, EventData, fhandle)
 %--------------------------------------------------------------------------
 % Callback for axis minimum text box
-fhandle=ancestor(get(hObject,'hghandle'),'figure');
+
 if isempty(fhandle)
     % Being deleted
     return
@@ -109,10 +115,10 @@ scUpdateAxisControls(fhandle, 'xmin');
 end
 
 %--------------------------------------------------------------------------
-function xmax(hObject, EventData)
+function xmax(hObject, EventData, fhandle)
 %--------------------------------------------------------------------------
 % Callback for axis maximum text box
-fhandle=ancestor(get(hObject,'hghandle'),'figure');
+
 if isempty(fhandle)
     % Being deleted
     return

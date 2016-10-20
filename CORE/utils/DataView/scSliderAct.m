@@ -3,8 +3,9 @@ function scSliderAct(hObject, EventData, fhandle)
 %
 %ML 05/05
 
+
 % Avoid repeated updates if dragging
-if  isMultipleCall()
+if  isMultipleCall() || ~ishghandle(fhandle)
     return
 end
 
